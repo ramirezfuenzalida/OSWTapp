@@ -46,8 +46,8 @@ import { supabase } from './supabaseClient.ts';
  * CONFIGURACIÓN DE MARCA
  * ==========================================
  */
-const APP_LOGO_URL = "./logo_orquesta_sinfonica_wt.png";
-const HERO_IMAGE_URL = "./logo_orquesta_sinfonica_wt.png";
+const APP_LOGO_URL = "/logo_orquesta_sinfonica_wt.png";
+const HERO_IMAGE_URL = "/logo_orquesta_sinfonica_wt.png";
 const APP_NAME = "OSWT";
 const APP_SUBTITLE = "Orquesta Sinfónica William Taylor";
 const APP_VERSION = "1.0.1";
