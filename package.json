@@ -1,0 +1,29 @@
+{
+  "name": "inventos",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"vite --port 3000\" \"json-server db.json --port 3004 --host 0.0.0.0\"",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.3",
+    "concurrently": "^9.2.1",
+    "json-server": "^1.0.0-beta.6",
+    "jspdf": "2.5.2",
+    "jspdf-autotable": "3.8.4",
+    "lucide-react": "0.475.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "recharts": "2.15.0",
+    "xlsx": "0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

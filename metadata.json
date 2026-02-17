@@ -1,0 +1,5 @@
+{
+  "name": "InventOS",
+  "description": "An elegant executive dashboard for managing orchestra instrument inventory with Excel upload support, KPI tracking, and visual data analytics.",
+  "requestFramePermissions": []
+}

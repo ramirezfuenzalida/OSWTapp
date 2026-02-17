@@ -1,0 +1,25 @@
+
+{
+  "short_name": "OSWT",
+  "name": "OSWT Inventario",
+  "description": "Gestión de Instrumentos William Taylor",
+  "icons": [
+    {
+      "src": "logo_orquesta_sinfonica_wt.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo_orquesta_sinfonica_wt.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#020617",
+  "background_color": "#020617"
+}

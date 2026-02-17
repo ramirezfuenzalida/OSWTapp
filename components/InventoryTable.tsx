@@ -1,0 +1,134 @@
+
+import React from 'react';
+import { Building2, Home, Tag, User, Monitor, Search, CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
+import { InventoryItem } from '../types.ts';
+import { globalNormalize, getEstadoCategoria } from '../App.tsx';
+
+interface InventoryTableProps {
+  data: InventoryItem[];
+}
+
+const InventoryTable: React.FC<InventoryTableProps> = ({ data }) => {
+  const isLoaned = (val: string) => {
+    const v = globalNormalize(val);
+    return v === 'si' || v === 'yes' || v === 'prestado' || v === 'en casa' || v === 'hogar' || v === 'salida';
+  };
+
+  const safeUpperCase = (val: any) => val ? String(val).toUpperCase().trim() : "";
+
+  return (
+    <div className="overflow-x-auto custom-scrollbar">
+      <table className="min-w-full">
+        <thead className="bg-[#020617] sticky top-0 z-10">
+          <tr className="border-b border-slate-900/50">
+            <th className="px-8 py-6 text-left text-[10px] font-black text-slate-700 uppercase tracking-[0.3em]">#</th>
+            <th className="px-8 py-6 text-left text-[10px] font-black text-slate-700 uppercase tracking-[0.3em]">Instrumento</th>
+            <th className="px-8 py-6 text-left text-[10px] font-black text-slate-700 uppercase tracking-[0.3em]">Marca / Modelo</th>
+            <th className="px-8 py-6 text-left text-[10px] font-black text-slate-700 uppercase tracking-[0.3em]">Usuario</th>
+            <th className="px-8 py-6 text-left text-[10px] font-black text-slate-700 uppercase tracking-[0.3em]">Monitor</th>
+            <th className="px-8 py-6 text-left text-[10px] font-black text-slate-700 uppercase tracking-[0.3em]">Ubicación</th>
+            <th className="px-8 py-6 text-left text-[10px] font-black text-slate-700 uppercase tracking-[0.3em]">Estado</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-900/30 bg-[#020617]">
+          {data.length > 0 ? data.map((item, idx) => {
+            const categoria = getEstadoCategoria(item.Estado);
+            const loaned = isLoaned(item.Prestado);
+            return (
+              <tr key={idx} className="group transition-all hover:bg-slate-900/40 border-b border-slate-900/10">
+                <td className="px-8 py-8 whitespace-nowrap"><span className="text-[11px] font-black text-slate-700 tracking-widest">{idx + 1}</span></td>
+                
+                <td className="px-8 py-8 whitespace-nowrap">
+                  <div className="flex flex-col min-w-[200px]">
+                    <span className="text-[15px] font-black text-white tracking-tight uppercase group-hover:text-indigo-400 transition-colors">
+                      {safeUpperCase(item.Instrumento) || 'SIN NOMBRE'}
+                    </span>
+                    <span className="text-[9px] font-black text-slate-600 tracking-[0.18em] uppercase">
+                      {safeUpperCase(item.Familia) || 'SIN CATEGORÍA'}
+                    </span>
+                  </div>
+                </td>
+
+                <td className="px-8 py-8 whitespace-nowrap">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <Tag className="w-3.5 h-3.5 text-indigo-500" />
+                      <span className="text-[13px] font-black text-slate-200 uppercase tracking-tight">
+                        {safeUpperCase(item.Marca) || 'GENÉRICO'}
+                      </span>
+                    </div>
+                    {item.Modelo && (
+                      <span className="text-[10px] font-bold text-slate-500 uppercase italic ml-5">
+                        MOD: {safeUpperCase(item.Modelo)}
+                      </span>
+                    )}
+                  </div>
+                </td>
+
+                <td className="px-8 py-8 whitespace-nowrap">
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2.5 mb-1">
+                      <User className={`w-3.5 h-3.5 ${item.Estudiante ? 'text-indigo-400' : 'text-slate-800'}`} />
+                      <span className={`text-[12px] font-black tracking-wide uppercase ${item.Estudiante ? 'text-slate-200' : 'text-slate-800 italic'}`}>
+                        {safeUpperCase(item.Estudiante) || 'SIN ASIGNAR'}
+                      </span>
+                    </div>
+                    {item.Curso && <span className="text-[9px] font-black text-slate-600 tracking-widest uppercase ml-6">{safeUpperCase(item.Curso)}</span>}
+                  </div>
+                </td>
+
+                <td className="px-8 py-8 whitespace-nowrap">
+                  <div className="flex items-center gap-2.5">
+                    <Monitor className="w-3.5 h-3.5 text-indigo-500 opacity-60" />
+                    <span className="text-[11px] font-black text-slate-300 uppercase tracking-tight">
+                      {safeUpperCase(item.Responsable) || 'SIN MONITOR'}
+                    </span>
+                  </div>
+                </td>
+
+                <td className="px-8 py-8 whitespace-nowrap">
+                  {loaned ? (
+                    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase bg-amber-500/10 text-amber-500 border border-amber-500/20 shadow-lg shadow-amber-500/5">
+                      <Home className="w-3.5 h-3.5" /> HOGAR
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase bg-slate-950 text-slate-500 border border-slate-800">
+                      <Building2 className="w-3.5 h-3.5 opacity-60" /> SALA DE MÚSICA
+                    </span>
+                  )}
+                </td>
+
+                <td className="px-8 py-8 whitespace-nowrap">
+                  {categoria === 'BUENO' ? (
+                    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                      <CheckCircle className="w-3 h-3" /> BUENO
+                    </span>
+                  ) : categoria === 'REGULAR' ? (
+                    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                      <HelpCircle className="w-3 h-3" /> REGULAR
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase bg-rose-500/10 text-rose-500 border border-rose-500/20">
+                      <AlertCircle className="w-3 h-3" /> MALO
+                    </span>
+                  )}
+                </td>
+              </tr>
+            );
+          }) : (
+            <tr>
+              <td colSpan={7} className="px-10 py-48 text-center">
+                <div className="flex flex-col items-center gap-4">
+                  <Search className="w-12 h-12 text-slate-900" />
+                  <p className="text-slate-800 font-black uppercase tracking-[0.5em] text-xs opacity-50">No hay coincidencias</p>
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default InventoryTable;
