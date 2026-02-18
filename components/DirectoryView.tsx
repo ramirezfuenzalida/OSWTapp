@@ -244,22 +244,22 @@ const DirectoryView: React.FC = () => {
             <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
                     <div className="flex items-center gap-5">
-                        <button onClick={() => setViewMode('grid')} className="p-4 bg-slate-950/80 hover:bg-slate-900 rounded-2xl transition-all border border-white/5 hover:border-indigo-500/50 group">
-                            <ChevronLeft className="w-6 h-6 text-slate-400 group-hover:text-white" />
+                        <button onClick={() => setViewMode('grid')} className="p-3 md:p-4 bg-slate-950/80 hover:bg-slate-900 rounded-2xl transition-all border border-white/5 hover:border-indigo-500/50 group">
+                            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-slate-400 group-hover:text-white" />
                         </button>
                         <div>
-                            <h2 className="text-[2.5rem] font-black italic tracking-tighter text-white uppercase leading-none">
+                            <h2 className="text-2xl md:text-[2.5rem] font-black italic tracking-tighter text-white uppercase leading-none">
                                 Perfil del <span className="text-indigo-400">Estudiante</span>
                             </h2>
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mt-3">SISTEMA PREMIUM DE GESTIÓN • OSWT</p>
+                            <p className="text-[8px] md:text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] md:tracking-[0.4em] mt-2 md:mt-3">SISTEMA PREMIUM DE GESTIÓN • OSWT</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 w-full md:w-auto">
                         <button
                             onClick={() => setViewMode('edit')}
-                            className="bg-indigo-600 hover:bg-indigo-500 text-white font-black px-10 py-5 rounded-[24px] flex items-center gap-3 shadow-[0_20px_40px_-10px_rgba(192,38,211,0.3)] transition-all hover:scale-105 active:scale-95 border-t border-white/20"
+                            className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-black px-6 md:px-10 py-4 md:py-5 rounded-[20px] md:rounded-[24px] flex items-center justify-center gap-3 shadow-[0_20px_40px_-10px_rgba(192,38,211,0.3)] transition-all hover:scale-105 active:scale-95 border-t border-white/20 text-xs md:text-sm"
                         >
-                            <Edit3 className="w-5 h-5" />
+                            <Edit3 className="w-4 h-4 md:w-5 md:h-5" />
                             MODIFICAR FICHA
                         </button>
                     </div>
@@ -275,13 +275,13 @@ const DirectoryView: React.FC = () => {
                         className="hidden"
                     />
 
-                    <section className="bg-[#0A0C14] p-16 rounded-[80px] border border-white/5 flex flex-col md:flex-row items-center gap-20 relative overflow-hidden group shadow-[0_80px_160px_-40px_rgba(0,0,0,0.8)] border-b-indigo-500/20">
-                        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-600/10 blur-[180px] rounded-full -mr-40 -mt-40"></div>
-                        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-amber-500/5 blur-[120px] rounded-full -ml-32 -mb-32"></div>
+                    <section className="bg-[#0A0C14] p-8 md:p-16 rounded-[40px] md:rounded-[80px] border border-white/5 flex flex-col md:flex-row items-center gap-10 md:gap-20 relative overflow-hidden group shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] border-b-indigo-500/20">
+                        <div className="absolute top-0 right-0 w-64 md:w-[600px] h-64 md:h-[600px] bg-indigo-600/10 blur-[80px] md:blur-[180px] rounded-full -mr-20 md:-mr-40 -mt-20 md:-mt-40"></div>
+                        <div className="absolute bottom-0 left-0 w-48 md:w-[400px] h-48 md:h-[400px] bg-amber-500/5 blur-[60px] md:blur-[120px] rounded-full -ml-16 md:-ml-32 -mb-16 md:-mb-32"></div>
 
                         <div className="relative shrink-0">
                             <div
-                                className="relative group/bio cursor-pointer w-80 h-80 rounded-[72px] overflow-hidden border-4 border-white/10 shadow-[0_32px_64px_rgba(0,0,0,0.5)] bg-slate-900 flex items-center justify-center transition-all group-hover/bio:scale-[1.03] duration-1000"
+                                className="relative group/bio cursor-pointer w-48 h-48 md:w-80 md:h-80 rounded-[36px] md:rounded-[72px] overflow-hidden border-4 border-white/10 shadow-[0_24px_48px_rgba(0,0,0,0.5)] bg-slate-900 flex items-center justify-center transition-all group-hover/bio:scale-[1.03] duration-1000"
                                 onClick={() => !uploading && fileInputRef.current?.click()}
                             >
                                 {selectedStudent.photo_url ? (
@@ -327,22 +327,22 @@ const DirectoryView: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="flex-1 text-center md:text-left space-y-10 relative z-10">
-                            <div className="space-y-6">
+                        <div className="flex-1 text-center md:text-left space-y-6 md:space-y-10 relative z-10">
+                            <div className="space-y-4 md:space-y-6">
                                 <div className="flex items-center justify-center md:justify-start gap-4">
-                                    <div className="h-0.5 w-12 bg-amber-500/40"></div>
-                                    <p className="text-amber-500 font-black text-[10px] uppercase tracking-[0.7em]">MÚSICO DE ORQUESTA</p>
+                                    <div className="h-0.5 w-8 md:w-12 bg-amber-500/40"></div>
+                                    <p className="text-amber-500 font-black text-[8px] md:text-[10px] uppercase tracking-[0.4em] md:tracking-[0.7em]">MÚSICO DE ORQUESTA</p>
                                 </div>
-                                <h3 className="text-[5.5rem] font-black text-white italic tracking-tighter uppercase leading-[0.7] drop-shadow-2xl">{selectedStudent.name}</h3>
+                                <h3 className="text-4xl md:text-[5.5rem] font-black text-white italic tracking-tighter uppercase leading-[0.85] md:leading-[0.7] drop-shadow-2xl">{selectedStudent.name}</h3>
                             </div>
-                            <div className="flex flex-wrap justify-center md:justify-start gap-8">
-                                <div className="bg-indigo-600/10 text-indigo-300 border border-indigo-500/20 px-12 py-5 rounded-[32px] flex items-center gap-4 transition-all hover:bg-indigo-500/20">
-                                    <Music className="w-6 h-6" />
-                                    <span className="text-base font-black uppercase tracking-[0.2em]">{selectedStudent.instrument || 'SIN INSTRUMENTO'}</span>
+                            <div className="flex flex-wrap justify-center md:justify-start gap-4 md:gap-8">
+                                <div className="bg-indigo-600/10 text-indigo-300 border border-indigo-500/20 px-6 md:px-12 py-3 md:py-5 rounded-[20px] md:rounded-[32px] flex items-center gap-3 md:gap-4 transition-all hover:bg-indigo-500/20">
+                                    <Music className="w-4 h-4 md:w-6 md:h-6" />
+                                    <span className="text-xs md:text-base font-black uppercase tracking-[0.1em] md:tracking-[0.2em]">{selectedStudent.instrument || 'SIN INSTRUMENTO'}</span>
                                 </div>
-                                <div className="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-12 py-5 rounded-[32px] flex items-center gap-4 transition-all hover:bg-amber-500/20">
-                                    <MapPin className="w-6 h-6" />
-                                    <span className="text-base font-black uppercase tracking-[0.2em]">{selectedStudent.course}</span>
+                                <div className="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-6 md:px-12 py-3 md:py-5 rounded-[20px] md:rounded-[32px] flex items-center gap-3 md:gap-4 transition-all hover:bg-amber-500/20">
+                                    <MapPin className="w-4 h-4 md:w-6 md:h-6" />
+                                    <span className="text-xs md:text-base font-black uppercase tracking-[0.1em] md:tracking-[0.2em]">{selectedStudent.course}</span>
                                 </div>
                             </div>
                         </div>
@@ -350,38 +350,38 @@ const DirectoryView: React.FC = () => {
 
                     {/* Information Grid - Simplified Luxury */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                        <section className="bg-slate-950/40 p-16 rounded-[72px] border border-white/5 space-y-14 shadow-3xl hover:border-indigo-500/20 transition-all group/info relative overflow-hidden">
+                        <section className="bg-slate-950/40 p-10 md:p-16 rounded-[40px] md:rounded-[72px] border border-white/5 space-y-10 md:space-y-14 shadow-3xl hover:border-indigo-500/20 transition-all group/info relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-3xl rounded-full"></div>
-                            <h4 className="text-[13px] font-black text-indigo-400 uppercase tracking-[0.7em] flex items-center gap-6">
-                                <div className="w-16 h-px bg-indigo-500/40 group-hover/info:w-24 transition-all duration-700"></div> IDENTIDAD
+                            <h4 className="text-[10px] md:text-[13px] font-black text-indigo-400 uppercase tracking-[0.4em] md:tracking-[0.7em] flex items-center gap-4 md:gap-6">
+                                <div className="w-12 md:w-16 h-px bg-indigo-500/40 group-hover/info:w-24 transition-all duration-700"></div> IDENTIDAD
                             </h4>
-                            <div className="space-y-12">
+                            <div className="space-y-8 md:space-y-12">
                                 <div className="group/field">
-                                    <p className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-4 group-hover/field:text-indigo-400 transition-colors">Nombre del Estudiante</p>
-                                    <p className="text-3xl font-black text-white uppercase tracking-tighter italic leading-none">{selectedStudent.name}</p>
+                                    <p className="text-[9px] md:text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-3 md:mb-4 group-hover/field:text-indigo-400 transition-colors">Nombre del Estudiante</p>
+                                    <p className="text-xl md:text-3xl font-black text-white uppercase tracking-tighter italic leading-none">{selectedStudent.name}</p>
                                 </div>
                                 <div className="group/field">
-                                    <p className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-4 group-hover/field:text-indigo-400 transition-colors">Correo Electrónico</p>
-                                    <p className="text-sm font-bold text-white/90 lowercase truncate tracking-wider">{selectedStudent.email || 'UNREGISTERED'}</p>
+                                    <p className="text-[9px] md:text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-3 md:mb-4 group-hover/field:text-indigo-400 transition-colors">Correo Electrónico</p>
+                                    <p className="text-xs md:text-sm font-bold text-white/90 lowercase truncate tracking-wider">{selectedStudent.email || 'UNREGISTERED'}</p>
                                 </div>
                             </div>
                         </section>
 
-                        <section className="bg-slate-950/40 p-16 rounded-[72px] border border-white/5 space-y-14 shadow-3xl hover:border-amber-500/20 transition-all group/info relative overflow-hidden">
+                        <section className="bg-slate-950/40 p-10 md:p-16 rounded-[40px] md:rounded-[72px] border border-white/5 space-y-10 md:space-y-14 shadow-3xl hover:border-amber-500/20 transition-all group/info relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 blur-3xl rounded-full"></div>
-                            <h4 className="text-[13px] font-black text-amber-500 uppercase tracking-[0.7em] flex items-center gap-6">
-                                <div className="w-16 h-px bg-amber-500/40 group-hover/info:w-24 transition-all duration-700"></div> SEGURIDAD
+                            <h4 className="text-[10px] md:text-[13px] font-black text-amber-500 uppercase tracking-[0.4em] md:tracking-[0.7em] flex items-center gap-4 md:gap-6">
+                                <div className="w-12 md:w-16 h-px bg-amber-500/40 group-hover/info:w-24 transition-all duration-700"></div> SEGURIDAD
                             </h4>
-                            <div className="space-y-12">
+                            <div className="space-y-8 md:space-y-12">
                                 <div className="group/field">
-                                    <p className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-4 group-hover/field:text-amber-500 transition-colors">Apoderado Responsable</p>
-                                    <p className="text-3xl font-black text-white uppercase tracking-tighter italic leading-none">{selectedStudent.parent_name || 'SIN REGISTRO'}</p>
+                                    <p className="text-[9px] md:text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-3 md:mb-4 group-hover/field:text-amber-500 transition-colors">Apoderado Responsable</p>
+                                    <p className="text-xl md:text-3xl font-black text-white uppercase tracking-tighter italic leading-none">{selectedStudent.parent_name || 'SIN REGISTRO'}</p>
                                 </div>
                                 <div className="group/field">
-                                    <p className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-4 group-hover/field:text-amber-500 transition-colors">Línea de Emergencia</p>
+                                    <p className="text-[9px] md:text-[11px] font-black text-white/40 uppercase tracking-[0.4em] mb-3 md:mb-4 group-hover/field:text-amber-500 transition-colors">Línea de Emergencia</p>
                                     <div className="flex items-center gap-4">
-                                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.5)]"></div>
-                                        <p className="text-3xl font-black text-amber-400 tracking-tighter">{selectedStudent.parent_phone || 'SIN REGISTRO'}</p>
+                                        <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.5)]"></div>
+                                        <p className="text-xl md:text-3xl font-black text-amber-400 tracking-tighter">{selectedStudent.parent_phone || 'SIN REGISTRO'}</p>
                                     </div>
                                 </div>
                             </div>
