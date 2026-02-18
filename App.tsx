@@ -26,7 +26,9 @@ import {
   Sparkles,
   Users,
   Image as ImageIcon,
-  History
+  History,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 // Importaciones locales
@@ -51,7 +53,7 @@ const APP_LOGO_URL = `${import.meta.env.BASE_URL}logo_orquesta_sinfonica_wt.png`
 const HERO_IMAGE_URL = `${import.meta.env.BASE_URL}logo_orquesta_sinfonica_wt.png`;
 const APP_NAME = "OSWT";
 const APP_SUBTITLE = "Orquesta Sinfónica William Taylor";
-const APP_VERSION = "1.0.1";
+const APP_VERSION = "ExeApp 0.0.01";
 
 type ViewMode = 'dashboard' | 'list' | 'student-check' | 'directory' | 'reports' | 'monitor-detail' | 'loaned-detail' | 'repair-detail' | 'qr-access' | 'regular-detail' | 'bueno-detail';
 
@@ -99,6 +101,23 @@ const App: React.FC = () => {
   const [processingMessage, setProcessingMessage] = useState("PROCESANDO...");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showHistoryDeleteConfirm, setShowHistoryDeleteConfirm] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    }
+    return 'dark';
+  });
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.theme = newTheme;
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   const isLoaned = (val: string) => {
     const v = globalNormalize(val);
@@ -539,6 +558,30 @@ const App: React.FC = () => {
                 <label className="flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl text-indigo-400 hover:text-white hover:bg-white/5 cursor-pointer transition-all"><FileUp className="w-5 h-5 mr-3" /> Actualizar Excel<input type="file" className="hidden" accept=".xlsx, .xls" onChange={handleFileUpload} /></label>
                 <button onClick={() => { setShowHistoryDeleteConfirm(true); setIsMobileMenuOpen(false); }} className="flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl text-rose-500 hover:bg-rose-500/10 transition-all"><Trash2 className="w-5 h-5 mr-3" /> Borrar Reportes</button>
               </nav>
+
+              <div className="px-6 py-4 mt-auto border-t border-slate-900/50">
+                <div className="bg-slate-900/40 p-1 rounded-xl flex items-center gap-1">
+                  <button
+                    onClick={() => { if (theme !== 'light') toggleTheme(); }}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg transition-all ${theme === 'light' ? 'bg-white text-indigo-600 shadow-lg shadow-indigo-600/10' : 'text-slate-500 hover:text-slate-300'}`}
+                  >
+                    <Sun className="w-3.5 h-3.5" />
+                    <span className="text-[9px] font-black uppercase tracking-widest">Claro</span>
+                  </button>
+                  <button
+                    onClick={() => { if (theme !== 'dark') toggleTheme(); }}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg transition-all ${theme === 'dark' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-slate-300'}`}
+                  >
+                    <Moon className="w-3.5 h-3.5" />
+                    <span className="text-[9px] font-black uppercase tracking-widest">Oscuro</span>
+                  </button>
+                </div>
+                <div className="mt-3 text-center">
+                  <span className="text-[8px] font-bold text-slate-600 uppercase tracking-[0.2em] opacity-50">
+                    {APP_VERSION}
+                  </span>
+                </div>
+              </div>
             </div>
           </aside>
         </>

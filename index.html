@@ -23,17 +23,41 @@
   <meta name="mobile-web-app-capable" content="yes">
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // We can define semantic names if we want, but let's stick to dark: prefixes for now
+          }
+        }
+      }
+    }
+
+    // Initialize theme
+    if (localStorage.theme === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.classList.remove('dark')
+    } else {
+      document.documentElement.classList.add('dark')
+    }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #020617;
-      /* slate-950 */
-      color: #f1f5f9;
+      background-color: #f8fafc;
+      color: #1e293b;
       margin: 0;
       overflow-x: hidden;
       position: relative;
+      transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dark body {
+      background-color: #020617;
+      color: #f1f5f9;
     }
 
     /* Efectos de Iluminación Ambiental */
@@ -148,13 +172,189 @@
     .animate-shake {
       animation: shake 0.4s ease-in-out infinite;
     }
+
+    /* Transition for all theme-sensitive properties */
+    * {
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Light Mode Overrides (Applied when .dark class is NOT present on html) */
+    html:not(.dark) body {
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    html:not(.dark) .bg-\[\#020617\] {
+      background-color: #ffffff !important;
+    }
+
+    html:not(.dark) .bg-\[\#020617\]\/95 {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(20px) !important;
+    }
+
+    html:not(.dark) .bg-\[\#020617\]\/90 {
+      background-color: rgba(255, 255, 255, 0.90) !important;
+    }
+
+    html:not(.dark) .bg-slate-950 {
+      background-color: #f1f5f9 !important;
+    }
+
+    html:not(.dark) .bg-slate-900 {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    html:not(.dark) .border-slate-800 {
+      border-color: #e2e8f0 !important;
+    }
+
+    html:not(.dark) .bg-slate-900\/20 {
+      background-color: rgba(0, 0, 0, 0.03) !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    html:not(.dark) .bg-slate-900\/40 {
+      background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    html:not(.dark) .bg-slate-900\/90 {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    html:not(.dark) .border-slate-900 {
+      border-color: #e2e8f0 !important;
+    }
+
+    html:not(.dark) .border-slate-900\/30 {
+      border-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    html:not(.dark) .border-slate-900\/50 {
+      border-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    html:not(.dark) .border-white\/5 {
+      border-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    html:not(.dark) .border-white\/10 {
+      border-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    html:not(.dark) .text-slate-200 {
+      color: #0f172a !important;
+      /* Más oscuro */
+    }
+
+    html:not(.dark) .text-slate-300 {
+      color: #1e293b !important;
+      /* Más oscuro */
+    }
+
+    html:not(.dark) .text-slate-400 {
+      color: #334155 !important;
+      /* Más oscuro */
+    }
+
+    html:not(.dark) .text-slate-500 {
+      color: #475569 !important;
+      /* Más oscuro */
+    }
+
+    html:not(.dark) .text-slate-600 {
+      color: #475569 !important;
+      /* Más oscuro */
+    }
+
+    html:not(.dark) .text-slate-700 {
+      color: #64748b !important;
+      /* Más oscuro */
+    }
+
+    html:not(.dark) .text-slate-800 {
+      color: #94a3b8 !important;
+      /* Más oscuro */
+    }
+
+    html:not(.dark) .text-white {
+      color: #000000 !important;
+      /* Negro puro para máximo contraste */
+    }
+
+    html:not(.dark) .hover\:bg-white\/5:hover {
+      background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    html:not(.dark) .hover\:bg-slate-900\/40:hover {
+      background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    html:not(.dark) .bg-white\/5 {
+      background-color: rgba(0, 0, 0, 0.03) !important;
+    }
+
+    /* Resaltado Sala de Música en Modo Claro */
+    html:not(.dark) .bg-slate-950.text-slate-500.border-slate-800 {
+      background-color: #0369a1 !important;
+      /* Azul más fuerte */
+      color: #ffffff !important;
+      /* Texto blanco para contraste */
+      border-color: #0284c7 !important;
+      font-weight: 800 !important;
+      opacity: 1 !important;
+    }
+
+    /* Resaltado Sala de Música en Modo Oscuro */
+    .dark .bg-slate-950.text-slate-500.border-slate-800 {
+      background-color: rgba(56, 189, 248, 0.2) !important;
+      color: #38bdf8 !important;
+      border-color: rgba(56, 189, 248, 0.5) !important;
+      font-weight: 800 !important;
+    }
+
+    /* Ensure the logo container remains distinct */
+    html:not(.dark) .bg-white.border-slate-200 {
+      background-color: white !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    /* Input and Search adjustments */
+    html:not(.dark) input {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    html:not(.dark) input::placeholder {
+      color: #94a3b8 !important;
+    }
+
+    /* Modal/Overlay adjustments */
+    html:not(.dark) .bg-black\/80 {
+      background-color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    html:not(.dark) .selection\:text-white::selection {
+      color: white !important;
+    }
+
+    /* Custom Ambient Glows for Light Mode */
+    html:not(.dark) body::before {
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+    }
+
+    html:not(.dark) body::after {
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.03) 0%, rgba(255, 255, 255, 0) 70%);
+    }
   </style>
 </head>
 
 <body class="selection:bg-indigo-600 selection:text-white">
   <div id="root">
-    <div id="loader"
-      style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #020617;">
+    <div id="loader" class="bg-[#020617]"
+      style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
       <p
         style="color: #6366f1; font-family: sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 10px;">
         SISTEMA OSWT</p>
