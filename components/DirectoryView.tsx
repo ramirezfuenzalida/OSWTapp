@@ -593,14 +593,14 @@ const DirectoryView: React.FC = () => {
     return (
         <div className="space-y-16 animate-in fade-in duration-700">
             <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-12">
-                <div className="space-y-6 w-full">
-                    <h2 className="text-5xl md:text-[5rem] font-black italic tracking-tighter text-white uppercase leading-[0.85] md:leading-[0.75] animate-in slide-in-from-left duration-1000">
+                <div className="space-y-4 md:space-y-6 w-full">
+                    <h2 className="text-3xl md:text-[5rem] font-black italic tracking-tighter text-white uppercase leading-[0.9] md:leading-[0.75] animate-in slide-in-from-left duration-1000">
                         Estudiantes <br />
                         <span className="text-indigo-500">orquesta</span>
                     </h2>
-                    <div className="flex items-center gap-6 py-4">
-                        <div className="h-1 w-24 bg-indigo-600 rounded-full"></div>
-                        <p className="text-slate-600 font-bold text-xs tracking-[0.5em] uppercase">Base de Datos Centralizada • OSWT</p>
+                    <div className="flex items-center gap-3 md:gap-6 py-2 md:py-4">
+                        <div className="h-0.5 md:h-1 w-12 md:w-24 bg-indigo-600 rounded-full"></div>
+                        <p className="text-slate-600 font-bold text-[8px] md:text-xs tracking-[0.3em] md:tracking-[0.5em] uppercase">Base de Datos Centralizada • OSWT</p>
                     </div>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center gap-6 w-full xl:w-auto">
