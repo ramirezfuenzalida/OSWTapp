@@ -538,9 +538,31 @@ const App: React.FC = () => {
 
       <main className="flex-1 flex flex-col min-w-0">
         {!isStudentModeUrl && (
-          <header className="sticky top-0 z-20 bg-[#020617]/95 backdrop-blur-xl border-b border-slate-900 px-8 py-6 flex justify-between items-center">
-            <h1 className="text-2xl font-black uppercase italic tracking-tighter">{viewMode === 'directory' ? 'Estudiantes orquesta' : 'InventarioWT'}</h1>
-            {data.length > 0 && <button onClick={() => { const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Inventario"); XLSX.writeFile(wb, "Inventario.xlsx"); }} className="bg-emerald-600 px-4 py-2.5 rounded-xl text-xs font-black text-white uppercase flex items-center gap-2"><Save className="w-4 h-4" /> Exportar</button>}
+          <header className="sticky top-0 z-20 bg-[#020617]/95 backdrop-blur-xl border-b border-slate-900 px-6 py-4 flex justify-between items-center lg:px-8 lg:py-6">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="lg:hidden p-2 hover:bg-white/5 rounded-xl transition-colors"
+              >
+                <Menu className="w-6 h-6 text-white" />
+              </button>
+              <h1 className="text-xl lg:text-2xl font-black uppercase italic tracking-tighter">
+                {viewMode === 'directory' ? 'Estudiantes orquesta' : 'InventarioWT'}
+              </h1>
+            </div>
+            {data.length > 0 && (
+              <button
+                onClick={() => {
+                  const ws = XLSX.utils.json_to_sheet(data);
+                  const wb = XLSX.utils.book_new();
+                  XLSX.utils.book_append_sheet(wb, ws, "Inventario");
+                  XLSX.writeFile(wb, "Inventario.xlsx");
+                }}
+                className="bg-emerald-600 px-4 py-2 rounded-xl text-[10px] lg:text-xs font-black text-white uppercase flex items-center gap-2"
+              >
+                <Save className="w-4 h-4" /> <span className="hidden sm:inline">Exportar</span>
+              </button>
+            )}
           </header>
         )}
 
