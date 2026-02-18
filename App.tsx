@@ -517,23 +517,38 @@ const App: React.FC = () => {
       )}
 
       {!isStudentModeUrl && (
-        <aside className={`fixed lg:sticky top-0 h-screen w-72 bg-[#020617] border-r border-slate-900 z-[70] transition-transform lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-          <div className="flex flex-col h-full pt-8">
-            <div className="px-8 mb-12 flex justify-between"><Logo /><button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden"><X /></button></div>
-            <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto">
-              <button onClick={() => { setViewMode('dashboard'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl ${viewMode === 'dashboard' ? 'bg-indigo-600/10 text-white border border-indigo-500/20' : 'text-slate-400 hover:text-white'}`}><LayoutDashboard className="w-5 h-5 mr-3" /> Dashboard</button>
-              <button onClick={() => { setViewMode('list'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl ${viewMode === 'list' ? 'bg-indigo-600/10 text-white border border-indigo-500/20' : 'text-slate-400 hover:text-white'}`}><FileSpreadsheet className="w-5 h-5 mr-3" /> InventarioWT</button>
-              <button onClick={() => { setViewMode('reports'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl ${viewMode === 'reports' ? 'bg-indigo-600/10 text-white border border-indigo-500/20' : 'text-slate-400 hover:text-white'}`}><BarChart3 className="w-5 h-5 mr-3" /> Reportes</button>
-              <div className="pt-10 px-5 mb-4 text-[10px] font-black text-slate-600 uppercase tracking-widest">Alumnos</div>
-              <button onClick={() => { setViewMode('student-check'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl ${viewMode === 'student-check' ? 'bg-emerald-600/10 text-white border border-emerald-500/20' : 'text-slate-400 hover:text-white'}`}><UserCheck className="w-5 h-5 mr-3" /> Salida/Retorno</button>
-              <button onClick={() => { setViewMode('directory'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl ${viewMode === 'directory' ? 'bg-rose-600/10 text-white border border-rose-500/20' : 'text-slate-400 hover:text-white'}`}><Users className="w-5 h-5 mr-3" /> Estudiantes orquesta</button>
-              <button onClick={() => { setViewMode('qr-access'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl ${viewMode === 'qr-access' ? 'bg-indigo-600/10 text-white border border-indigo-500/20' : 'text-slate-400 hover:text-white'}`}><QrCode className="w-5 h-5 mr-3" /> Acceso QR</button>
-              <div className="pt-10 px-5 mb-4 text-[10px] font-black text-slate-600 uppercase tracking-widest">Herramientas</div>
-              <label className="flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl text-indigo-400 hover:text-white cursor-pointer"><FileUp className="w-5 h-5 mr-3" /> Actualizar Excel<input type="file" className="hidden" accept=".xlsx, .xls" onChange={handleFileUpload} /></label>
-              <button onClick={() => setShowHistoryDeleteConfirm(true)} className="flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl text-rose-500"><Trash2 className="w-5 h-5 mr-3" /> Borrar Reportes</button>
-            </nav>
-          </div>
-        </aside>
+        <>
+          {/* Backdrop/Overlay for mobile */}
+          <div
+            className={`fixed inset-0 bg-black/80 backdrop-blur-md z-[65] lg:hidden transition-all duration-700 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          <aside className={`fixed lg:sticky top-0 h-screen w-72 bg-[#020617] border-r border-slate-900 z-[70] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0 shadow-[20px_0_100px_rgba(0,0,0,0.9)]' : '-translate-x-full'}`}>
+            <div className="flex flex-col h-full pt-8">
+              <div className="px-8 mb-12 flex justify-between">
+                <Logo />
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="lg:hidden p-2 hover:bg-white/5 rounded-xl transition-colors"
+                >
+                  <X className="w-6 h-6 text-slate-400" />
+                </button>
+              </div>
+              <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto">
+                <button onClick={() => { setViewMode('dashboard'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl transition-all ${viewMode === 'dashboard' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><LayoutDashboard className="w-5 h-5 mr-3" /> Dashboard</button>
+                <button onClick={() => { setViewMode('list'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl transition-all ${viewMode === 'list' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><FileSpreadsheet className="w-5 h-5 mr-3" /> InventarioWT</button>
+                <button onClick={() => { setViewMode('reports'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl transition-all ${viewMode === 'reports' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><BarChart3 className="w-5 h-5 mr-3" /> Reportes</button>
+                <div className="pt-10 px-5 mb-4 text-[10px] font-black text-slate-600 uppercase tracking-widest">Alumnos</div>
+                <button onClick={() => { setViewMode('student-check'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl transition-all ${viewMode === 'student-check' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><UserCheck className="w-5 h-5 mr-3" /> Salida/Retorno</button>
+                <button onClick={() => { setViewMode('directory'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl transition-all ${viewMode === 'directory' ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><Users className="w-5 h-5 mr-3" /> Estudiantes orquesta</button>
+                <button onClick={() => { setViewMode('qr-access'); setIsMobileMenuOpen(false); }} className={`flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl transition-all ${viewMode === 'qr-access' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><QrCode className="w-5 h-5 mr-3" /> Acceso QR</button>
+                <div className="pt-10 px-5 mb-4 text-[10px] font-black text-slate-600 uppercase tracking-widest">Herramientas</div>
+                <label className="flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl text-indigo-400 hover:text-white hover:bg-white/5 cursor-pointer transition-all"><FileUp className="w-5 h-5 mr-3" /> Actualizar Excel<input type="file" className="hidden" accept=".xlsx, .xls" onChange={handleFileUpload} /></label>
+                <button onClick={() => { setShowHistoryDeleteConfirm(true); setIsMobileMenuOpen(false); }} className="flex w-full items-center px-5 py-4 text-sm font-semibold rounded-2xl text-rose-500 hover:bg-rose-500/10 transition-all"><Trash2 className="w-5 h-5 mr-3" /> Borrar Reportes</button>
+              </nav>
+            </div>
+          </aside>
+        </>
       )}
 
       <main className="flex-1 flex flex-col min-w-0">
