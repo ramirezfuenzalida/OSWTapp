@@ -593,8 +593,8 @@ const DirectoryView: React.FC = () => {
     return (
         <div className="space-y-16 animate-in fade-in duration-700">
             <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-12">
-                <div className="space-y-6">
-                    <h2 className="text-[5rem] font-black italic tracking-tighter text-white uppercase leading-[0.75] animate-in slide-in-from-left duration-1000">
+                <div className="space-y-6 w-full">
+                    <h2 className="text-5xl md:text-[5rem] font-black italic tracking-tighter text-white uppercase leading-[0.85] md:leading-[0.75] animate-in slide-in-from-left duration-1000">
                         Estudiantes <br />
                         <span className="text-indigo-500">orquesta</span>
                     </h2>
@@ -604,22 +604,22 @@ const DirectoryView: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center gap-6 w-full xl:w-auto">
-                    <div className="relative group flex-1 sm:w-[500px]">
-                        <Search className="absolute left-8 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-700 group-focus-within:text-white transition-colors" />
+                    <div className="relative group flex-1 w-full lg:w-[500px]">
+                        <Search className="absolute left-6 md:left-8 top-1/2 -translate-y-1/2 w-5 h-5 md:w-6 md:h-6 text-slate-700 group-focus-within:text-white transition-colors" />
                         <input
                             type="text"
                             placeholder="FILTRAR POR NOMBRE O INSTRUMENTO..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-slate-950/60 border-2 border-white/5 rounded-[40px] py-8 pl-20 pr-10 text-sm font-black text-white focus:border-indigo-500/40 outline-none transition-all uppercase placeholder:text-slate-800 placeholder:tracking-widest shadow-2xl"
+                            className="w-full bg-slate-950/60 border-2 border-white/5 rounded-[30px] md:rounded-[40px] py-5 md:py-8 pl-16 md:pl-20 pr-8 md:pr-10 text-xs md:text-sm font-black text-white focus:border-indigo-500/40 outline-none transition-all uppercase placeholder:text-slate-800 placeholder:tracking-widest shadow-2xl"
                         />
                     </div>
                     <button
                         onClick={handleAddNew}
-                        className="bg-white text-slate-950 p-8 rounded-[40px] shadow-[0_32px_64px_-20px_rgba(255,255,255,0.3)] hover:scale-105 active:scale-95 transition-all group flex items-center gap-4"
+                        className="w-full sm:w-auto bg-white text-slate-950 p-6 md:p-8 rounded-[30px] md:rounded-[40px] shadow-[0_32px_64px_-20px_rgba(255,255,255,0.3)] hover:scale-105 active:scale-95 transition-all group flex items-center justify-center gap-4"
                     >
-                        <UserPlus className="w-7 h-7" />
-                        <span className="font-black text-sm uppercase italic tracking-tighter hidden sm:inline">Añadir Estudiante</span>
+                        <UserPlus className="w-6 h-6 md:w-7 md:h-7" />
+                        <span className="font-black text-xs md:text-sm uppercase italic tracking-tighter">Añadir Estudiante</span>
                     </button>
                 </div>
             </div>
