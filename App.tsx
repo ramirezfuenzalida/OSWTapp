@@ -40,6 +40,7 @@ import ReportsView from './components/ReportsView.tsx';
 import QRAccessView from './components/QRAccessView.tsx';
 import DirectoryView from './components/DirectoryView.tsx';
 import { supabase } from './supabaseClient.ts';
+import { globalNormalize, getEstadoCategoria, inferFamilia } from './utils.ts';
 
 /** 
  * ==========================================
@@ -54,24 +55,6 @@ const APP_VERSION = "1.0.1";
 
 type ViewMode = 'dashboard' | 'list' | 'student-check' | 'directory' | 'reports' | 'monitor-detail' | 'loaned-detail' | 'repair-detail' | 'qr-access' | 'regular-detail' | 'bueno-detail';
 
-export const globalNormalize = (val: any): string => {
-  if (val === null || val === undefined) return "";
-  return val.toString()
-    .toLowerCase()
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9 ]/g, " ")
-    .replace(/\s+/g, " ");
-};
-
-export const getEstadoCategoria = (val: string): 'BUENO' | 'REGULAR' | 'MALO' => {
-  const s = globalNormalize(val);
-  if (s.includes('bueno') || s.includes('excelente') || s.includes('bien') || s.includes('optimo') || s.includes('nuevo')) return 'BUENO';
-  if (s.includes('malo') || s.includes('reparacion') || s.includes('danado') || s.includes('roto') || s.includes('mal')) return 'MALO';
-  if (s.includes('regular') || s.includes('ajuste') || s.includes('mantencion')) return 'REGULAR';
-  return 'BUENO';
-};
 
 const App: React.FC = () => {
   const queryParams = new URLSearchParams(window.location.search);
@@ -93,7 +76,9 @@ const App: React.FC = () => {
           supabase.from('students').select('*').order('name', { ascending: true })
         ]);
 
-        if (invRes.data && !isDeletingRef.current) setData(invRes.data as InventoryItem[]);
+        if (invRes.data && !isDeletingRef.current) {
+          setData(invRes.data as InventoryItem[]);
+        }
         if (histRes.data && !isDeletingRef.current) setHistory(histRes.data as MovementRecord[]);
         if (studRes.data && !isDeletingRef.current) setStudents(studRes.data as Student[]);
       } catch (err) {
@@ -426,7 +411,15 @@ const App: React.FC = () => {
     const loanedCount = data.filter(i => isLoaned(i.Prestado)).length;
     const catMap: any = {}; const monMap: any = {};
     data.forEach(item => {
-      catMap[item.Familia || 'SIN CATEGORÍA'] = (catMap[item.Familia || 'SIN CATEGORÍA'] || 0) + 1;
+      let familia = item.Familia || inferFamilia(item.Instrumento);
+      // Normalización de nombres largos para el gráfico
+      if (familia.includes('VIOLINES')) familia = 'VIOLINES Y VIOLAS';
+      else if (familia.includes('CELLOS')) familia = 'CELLOS Y CONTR.';
+      else if (familia.includes('BRONCE')) familia = 'V. BRONCE';
+      else if (familia.includes('MADERA')) familia = 'V. MADERA';
+      else if (familia.includes('PERCUSION')) familia = 'PERCUSIÓN';
+
+      catMap[familia] = (catMap[familia] || 0) + 1;
       monMap[item.Responsable || 'SIN MONITOR'] = (monMap[item.Responsable || 'SIN MONITOR'] || 0) + 1;
     });
     return {

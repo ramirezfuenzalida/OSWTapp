@@ -2,7 +2,7 @@
 import React from 'react';
 import { Building2, Home, Tag, User, Monitor, Search, CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
 import { InventoryItem } from '../types.ts';
-import { globalNormalize, getEstadoCategoria } from '../App.tsx';
+import { globalNormalize, getEstadoCategoria, inferFamilia } from '../utils.ts';
 
 interface InventoryTableProps {
   data: InventoryItem[];
@@ -37,14 +37,14 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ data }) => {
             return (
               <tr key={idx} className="group transition-all hover:bg-slate-900/40 border-b border-slate-900/10">
                 <td className="px-8 py-8 whitespace-nowrap"><span className="text-[11px] font-black text-slate-700 tracking-widest">{idx + 1}</span></td>
-                
+
                 <td className="px-8 py-8 whitespace-nowrap">
                   <div className="flex flex-col min-w-[200px]">
                     <span className="text-[15px] font-black text-white tracking-tight uppercase group-hover:text-indigo-400 transition-colors">
                       {safeUpperCase(item.Instrumento) || 'SIN NOMBRE'}
                     </span>
                     <span className="text-[9px] font-black text-slate-600 tracking-[0.18em] uppercase">
-                      {safeUpperCase(item.Familia) || 'SIN CATEGORÍA'}
+                      {safeUpperCase(item.Familia || inferFamilia(item.Instrumento)) || 'SIN CATEGORÍA'}
                     </span>
                   </div>
                 </td>

@@ -22,23 +22,37 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value, name }: any) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, name, percent }: any) => {
   const RADIAN = Math.PI / 180;
-  const radius = outerRadius + 30;
+  const radius = outerRadius + 15;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
+  // Dividir el nombre en dos líneas si es muy largo
+  const words = name.split(' ');
+  let line1 = name;
+  let line2 = '';
+
+  if (words.length > 2) {
+    line1 = words.slice(0, 2).join(' ');
+    line2 = words.slice(2).join(' ');
+  }
+
   return (
-    <text 
-      x={x} 
-      y={y} 
-      fill="#ffffff" 
-      textAnchor={x > cx ? 'start' : 'end'} 
-      dominantBaseline="central"
-      className="text-[11px] font-black"
-    >
-      {`${value}`}
-    </text>
+    <g>
+      <text
+        x={x}
+        y={y}
+        fill="#ffffff"
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+        className="text-[9px] font-black uppercase tracking-tighter"
+      >
+        <tspan x={x} dy="-0.6em">{line1}</tspan>
+        {line2 && <tspan x={x} dy="1em">{line2}</tspan>}
+        <tspan x={x} dy="1.2em" fill="#6366f1" className="text-[12px]">{(percent * 100).toFixed(0)}%</tspan>
+      </text>
+    </g>
   );
 };
 
@@ -57,25 +71,37 @@ const Charts: React.FC<ChartsProps> = ({ stats, onStatClick }) => {
         </h3>
         <div className="h-[450px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie 
-                data={stats.categorias} 
-                cx="50%" 
-                cy="45%" 
-                innerRadius={80} 
-                outerRadius={110} 
-                paddingAngle={6} 
-                dataKey="value" 
+            <PieChart margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+              <Pie
+                data={stats.categorias}
+                cx="50%"
+                cy="50%"
+                innerRadius={70}
+                outerRadius={100}
+                paddingAngle={stats.categorias.length > 1 ? 4 : 0}
+                dataKey="value"
                 stroke="transparent"
                 label={renderCustomizedLabel}
                 labelLine={{ stroke: '#64748b', strokeWidth: 1.5 }}
+                startAngle={90}
+                endAngle={450}
               >
                 {stats.categorias.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
-              <Legend verticalAlign="bottom" height={36} wrapperStyle={{ paddingTop: '20px', fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase' }} />
+              <Legend
+                verticalAlign="bottom"
+                height={36}
+                iconType="circle"
+                wrapperStyle={{
+                  paddingTop: '30px',
+                  fontSize: '10px',
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase'
+                }}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -86,19 +112,22 @@ const Charts: React.FC<ChartsProps> = ({ stats, onStatClick }) => {
         </h3>
         <div className="h-[450px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={estadoData} layout="vertical" margin={{ left: 20, right: 40 }}>
+            <BarChart
+              data={estadoData}
+              layout="vertical"
+              margin={{ left: 20, right: 60, top: 40, bottom: 40 }}
+            >
               <XAxis type="number" hide />
-              <YAxis 
-                type="category" 
-                dataKey="name" 
-                width={130} 
-                axisLine={false} 
-                tickLine={false} 
-                // Removed textTransform as it's not a valid SVG text property for recharts
-                tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 900 }} 
+              <YAxis
+                type="category"
+                dataKey="name"
+                width={110}
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 900 }}
               />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="count" radius={[0, 10, 10, 0]} barSize={40}>
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
+              <Bar dataKey="count" radius={[0, 12, 12, 0]} barSize={50}>
                 {estadoData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}

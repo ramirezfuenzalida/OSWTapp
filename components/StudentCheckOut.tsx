@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { Search, User, CheckCircle, ArrowRight, LogOut, LogIn, RotateCcw, Tag, UserCheck, AlertCircle } from 'lucide-react';
 import { InventoryItem } from '../types.ts';
-import { globalNormalize } from '../App.tsx';
+import { globalNormalize } from '../utils.ts';
 
 interface StudentCheckOutProps {
   inventory: InventoryItem[];
