@@ -644,7 +644,13 @@ const App: React.FC = () => {
             <>
               {viewMode === 'dashboard' && (
                 <div className="space-y-12">
-                  <KPICards stats={stats as any} onCardClick={(f) => setViewMode(f === 'loaned' ? 'loaned-detail' : f === 'malo' ? 'repair-detail' : 'list')} />
+                  <KPICards stats={stats as any} onCardClick={(f) => {
+                    if (f === 'loaned') setViewMode('loaned-detail');
+                    else if (f === 'malo') setViewMode('repair-detail');
+                    else if (f === 'regular') setViewMode('regular-detail');
+                    else if (f === 'bueno') setViewMode('bueno-detail');
+                    else setViewMode('list');
+                  }} />
                   <Charts stats={stats as any} />
                   <MonitorStats stats={stats as any} onMonitorClick={(name) => { setSelectedMonitor(name); setViewMode('monitor-detail'); }} />
                 </div>
