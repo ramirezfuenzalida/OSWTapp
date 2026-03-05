@@ -1,6 +1,6 @@
-
 import React from 'react';
-import { QrCode, Printer, ExternalLink, Info, Smartphone, CheckCircle } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
+import { Printer, ExternalLink, Info, Smartphone, CheckCircle } from 'lucide-react';
 
 const QRAccessView: React.FC = () => {
   // Estado para la URL base, permitiendo edición manual para corregir "localhost"
@@ -15,9 +15,6 @@ const QRAccessView: React.FC = () => {
   // Detectar si es localhost para mostrar advertencia
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-  // Usamos el API de QRServer para generar el código QR de forma segura
-  const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(studentUrl)}&bgcolor=ffffff&color=020617&qzone=2`;
-
   const handlePrint = () => {
     window.print();
   };
@@ -30,11 +27,20 @@ const QRAccessView: React.FC = () => {
         <div className="flex flex-col items-center text-center space-y-8">
           <div className="relative group">
             <div className="absolute inset-0 bg-indigo-500/20 blur-3xl rounded-full group-hover:bg-indigo-500/30 transition-all print:hidden" />
-            <div className="relative bg-white p-6 rounded-[2.5rem] shadow-2xl border-4 border-indigo-500/20 overflow-hidden">
-              <img
-                src={qrImageUrl}
-                alt="QR Code de Acceso Alumnos"
-                className="w-64 h-64 sm:w-80 sm:h-80 object-contain"
+            <div className="relative bg-white p-8 rounded-[2.5rem] shadow-2xl border-4 border-indigo-500/20 overflow-hidden flex items-center justify-center">
+              <QRCodeSVG
+                value={studentUrl}
+                size={320}
+                level="H"
+                includeMargin={false}
+                imageSettings={{
+                  src: "/logo_orquesta_sinfonica_wt.png",
+                  x: undefined,
+                  y: undefined,
+                  height: 60,
+                  width: 60,
+                  excavate: true,
+                }}
               />
               <div className="absolute bottom-2 left-0 right-0 text-center">
                 <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">Escanea para Registrar</span>

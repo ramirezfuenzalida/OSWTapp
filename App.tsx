@@ -211,6 +211,7 @@ const App: React.FC = () => {
             const normExcelKey = globalNormalize(excelKey);
             let matchedField = "";
 
+            // First pass: look for exact matches (highest priority)
             for (const [field, patterns] of Object.entries(standardFields)) {
               if (patterns.some(p => normExcelKey === globalNormalize(p))) {
                 matchedField = field;
@@ -218,14 +219,20 @@ const App: React.FC = () => {
               }
             }
 
+            // Second pass: look for partial matches (only if no exact match found)
             if (!matchedField) {
-              for (const [field, patterns] of Object.entries(standardFields)) {
-                if (patterns.some(p => normExcelKey.includes(globalNormalize(p)))) {
-                  if (normExcelKey.includes('estudiante') || normExcelKey.includes('alumno')) {
+              // Priority list of keywords to check for partial matches
+              // We check 'Familia' and other specific ones BEFORE 'Instrumento' to avoid greedy matches
+              const priorityOrder = ['Familia', 'Medida', 'Medidas', 'Serie', 'Estado', 'Marca', 'Modelo', 'Estudiante', 'Instrumento'];
+
+              for (const field of priorityOrder) {
+                const patterns = standardFields[field];
+                if (patterns && patterns.some(p => normExcelKey.includes(globalNormalize(p)))) {
+                  if (field === 'Estudiante' && (normExcelKey.includes('estudiante') || normExcelKey.includes('alumno'))) {
                     matchedField = 'Estudiante';
-                  } else {
-                    matchedField = field;
+                    break;
                   }
+                  matchedField = field;
                   break;
                 }
               }
@@ -233,7 +240,9 @@ const App: React.FC = () => {
 
             if (matchedField) {
               const currentVal = mappedItem[matchedField];
+              // If it's an exact match of a pattern, it should overwrite any previous fuzzy match
               const isExact = standardFields[matchedField].some(p => normExcelKey === globalNormalize(p));
+
               if (!currentVal || isExact) {
                 mappedItem[matchedField] = row[excelKey];
               } else {
