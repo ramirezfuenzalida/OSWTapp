@@ -1,11 +1,11 @@
-DirectoryIndex index.html
+DirectoryIndex index.html index.php
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
-  RewriteRule ^index\.html$ - [L]
+  
+  # If the app is in a subfolder, this handles it. 
+  # If it's a subdomain, it still works because the rule is relative.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_FILENAME} !-l
   RewriteRule . index.html [L]
 </IfModule>
