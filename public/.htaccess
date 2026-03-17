@@ -1,10 +1,17 @@
+# Disable Caching for Force Reload
+<IfModule mod_headers.c>
+  Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+  Header set Pragma "no-cache"
+  Header set Expires "0"
+</IfModule>
+
 DirectoryIndex index.html index.php
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /inventario/
   
-  # If the app is in a subfolder, this handles it. 
-  # If it's a subdomain, it still works because the rule is relative.
+  # Ensure we handle the subdirectory correctly
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . index.html [L]
