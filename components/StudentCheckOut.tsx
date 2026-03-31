@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { Search, User, CheckCircle, ArrowRight, LogOut, LogIn, RotateCcw, Tag, UserCheck, AlertCircle } from 'lucide-react';
 import { InventoryItem } from '../types.ts';
-import { globalNormalize } from '../utils.ts';
+import { globalNormalize, isItemLoaned } from '../utils.ts';
 
 interface StudentCheckOutProps {
   inventory: InventoryItem[];
@@ -25,10 +25,7 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
 
   const normalizeText = (val: any) => (val || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 
-  const isLoaned = (item: InventoryItem) => {
-    const v = globalNormalize(item.Prestado);
-    return v === 'si' || v === 'yes' || v === 'prestado' || v === 'en casa' || v === 'hogar' || v === 'salida';
-  };
+  // isItemLoaned is now imported from utils.ts
 
   /**
    * Genera un sonido de Acorde Premium (Estilo iOS Success Chord)
@@ -90,7 +87,7 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
   const loanedStudents = useMemo(() => {
     const studentNamesInInventory = new Set(
       inventory
-        .filter(item => isLoaned(item))
+        .filter(item => isItemLoaned(item))
         .map(item => globalNormalize(item.Estudiante))
         .filter(name => name !== '')
     );
@@ -103,7 +100,7 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
     if (!term) return [];
 
     return inventory.filter(item => {
-      const loaned = isLoaned(item);
+      const loaned = isItemLoaned(item);
 
       // En modo SALIDA: solo items en sala
       // En modo RETORNO: solo items en hogar (prestados)
@@ -260,8 +257,8 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
                           </div>
                         </div>
                         <div className="flex items-center gap-4">
-                          <span className={`text-[8px] font-black px-2 py-1 rounded-md border ${isLoaned(item) ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'}`}>
-                            {isLoaned(item) ? 'EN HOGAR' : 'EN SALA'}
+                          <span className={`text-[8px] font-black px-2 py-1 rounded-md border ${isItemLoaned(item) ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'}`}>
+                            {isItemLoaned(item) ? 'EN HOGAR' : 'EN SALA'}
                           </span>
                           <ArrowRight className="w-4 h-4 text-slate-700" />
                         </div>
@@ -295,8 +292,8 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
                 </div>
                 <div className="flex-1">
                   <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Estado de Inventario</p>
-                  <span className={`inline-block text-[10px] font-black uppercase px-3 py-1 rounded-full border ${isLoaned(selectedInstrument) ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'}`}>
-                    {isLoaned(selectedInstrument) ? 'Fuera de Sala' : 'En Sala (Disponible)'}
+                  <span className={`inline-block text-[10px] font-black uppercase px-3 py-1 rounded-full border ${isItemLoaned(selectedInstrument) ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'}`}>
+                    {isItemLoaned(selectedInstrument) ? 'Fuera de Sala' : 'En Sala (Disponible)'}
                   </span>
                 </div>
               </div>

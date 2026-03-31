@@ -2,17 +2,14 @@
 import React from 'react';
 import { Building2, Home, Tag, User, Monitor, Search, CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
 import { InventoryItem } from '../types.ts';
-import { globalNormalize, getEstadoCategoria, inferFamilia } from '../utils.ts';
+import { globalNormalize, getEstadoCategoria, inferFamilia, isItemLoaned } from '../utils.ts';
 
 interface InventoryTableProps {
   data: InventoryItem[];
 }
 
 const InventoryTable: React.FC<InventoryTableProps> = ({ data }) => {
-  const isLoaned = (val: string) => {
-    const v = globalNormalize(val);
-    return v === 'si' || v === 'yes' || v === 'prestado' || v === 'en casa' || v === 'hogar' || v === 'salida';
-  };
+  // isItemLoaned is now imported from utils.ts
 
   const safeUpperCase = (val: any) => val ? String(val).toUpperCase().trim() : "";
 
@@ -33,7 +30,7 @@ const InventoryTable: React.FC<InventoryTableProps> = ({ data }) => {
         <tbody className="divide-y divide-slate-900/30 bg-[#020617]">
           {data.length > 0 ? data.map((item, idx) => {
             const categoria = getEstadoCategoria(item.Estado);
-            const loaned = isLoaned(item.Prestado);
+            const loaned = isItemLoaned(item);
             return (
               <tr key={idx} className="group transition-all hover:bg-slate-900/40 border-b border-slate-900/10">
                 <td className="px-8 py-8 whitespace-nowrap"><span className="text-[11px] font-black text-slate-700 tracking-widest">{idx + 1}</span></td>

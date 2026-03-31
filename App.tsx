@@ -42,7 +42,7 @@ import ReportsView from './components/ReportsView.tsx';
 import QRAccessView from './components/QRAccessView.tsx';
 import DirectoryView from './components/DirectoryView.tsx';
 import { supabase } from './supabaseClient.ts';
-import { globalNormalize, getEstadoCategoria, inferFamilia } from './utils.ts';
+import { globalNormalize, getEstadoCategoria, inferFamilia, isItemLoaned } from './utils.ts';
 
 /** 
  * ==========================================
@@ -119,17 +119,14 @@ const App: React.FC = () => {
     }
   };
 
-  const isLoaned = (val: string) => {
-    const v = globalNormalize(val);
-    return v === 'si' || v === 'yes' || v === 'prestado' || v === 'en casa' || v === 'hogar' || v === 'salida';
-  };
+  // isItemLoaned is now imported from utils.ts
 
   const filteredData = useMemo(() => {
     let base = [...data];
     if (viewMode === 'monitor-detail' && selectedMonitor) {
       base = base.filter(item => globalNormalize(item.Responsable) === globalNormalize(selectedMonitor));
     } else if (viewMode === 'loaned-detail') {
-      base = base.filter(item => isLoaned(item.Prestado));
+      base = base.filter(item => isItemLoaned(item));
     } else if (viewMode === 'repair-detail') {
       base = base.filter(item => getEstadoCategoria(item.Estado) === 'MALO');
     } else if (viewMode === 'regular-detail') {
@@ -436,7 +433,7 @@ const App: React.FC = () => {
     const countBueno = data.filter(i => getEstadoCategoria(i.Estado) === 'BUENO').length;
     const countRegular = data.filter(i => getEstadoCategoria(i.Estado) === 'REGULAR').length;
     const countMalo = data.filter(i => getEstadoCategoria(i.Estado) === 'MALO').length;
-    const loanedCount = data.filter(i => isLoaned(i.Prestado)).length;
+    const loanedCount = data.filter(i => isItemLoaned(i)).length;
     const catMap: any = {}; const monMap: any = {};
     data.forEach(item => {
       let familia = item.Familia || inferFamilia(item.Instrumento);

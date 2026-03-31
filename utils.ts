@@ -27,3 +27,22 @@ export const inferFamilia = (instrumento: string): string => {
     if (s.includes('percusion') || s.includes('timpani') || s.includes('bateria') || s.includes('bombo') || s.includes('tambor') || s.includes('xilofono')) return 'PERCUSIÓN';
     return 'OTROS';
 };
+
+
+/**
+ * Verifica si un instrumento se considera "Prestado" (fuera de sala).
+ * Es resiliente: si tiene un estudiante asignado, se considera prestado 
+ * a menos que explícitamente se marque como No Prestado o Disponible.
+ */
+export const isItemLoaned = (item: any): boolean => {
+    if (!item) return false;
+    
+    const v = globalNormalize(item.Prestado || "");
+    const hasStudent = !!item.Estudiante && item.Estudiante.trim() !== "" && item.Estudiante.toUpperCase() !== "DISPONIBLE" && item.Estudiante.toUpperCase() !== "NO DISPONIBLE";
+    
+    const isExplicitlyLoaned = v === 'si' || v === 'yes' || v === 'prestado' || v === 'en casa' || v === 'hogar' || v === 'salida';
+    
+    if (hasStudent && v !== 'no' && v !== 'disponible' && v !== 'en sala') return true;
+    
+    return isExplicitlyLoaned;
+};
