@@ -342,7 +342,7 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
 
           <button
             type="submit"
-            disabled={!selectedInstrument || !studentName || !studentCourse} // Disable if student details are missing
+            disabled={!selectedInstrument || !studentName || (mode === 'out' && !studentCourse)}
             className={`w-full py-7 rounded-[2rem] font-black text-xl uppercase italic tracking-tighter shadow-2xl disabled:opacity-20 text-white transition-all active:scale-95 ${mode === 'out' ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20' : 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-600/20'}`}
           >
             {mode === 'out' ? 'Confirmar Salida' : 'Confirmar Retorno'}
