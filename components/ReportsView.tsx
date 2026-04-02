@@ -49,31 +49,52 @@ const ReportsView: React.FC<ReportsViewProps> = ({ history, onClearHistory }) =>
     return monthlyHistory.filter(rec => rec.status === statusFilter);
   }, [monthlyHistory, statusFilter]);
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     if (monthlyHistory.length === 0) return;
 
     const doc = new jsPDF();
     const mesNombre = MESES[selectedMonth].toLowerCase();
     const fileName = `reporte mensual ${mesNombre} ${selectedYear}.pdf`;
 
+    // Cargar logotipo
+    const logoUrl = '/logo_orquesta_sinfonica_wt.png';
+    const img = new Image();
+    img.src = logoUrl;
+
+    await new Promise((resolve) => {
+      img.onload = resolve;
+      img.onerror = resolve; // Continuar aunque falle el logo
+    });
+
+    let currentY = 22;
+
+    if (img.complete && img.naturalWidth > 0) {
+      // Agregar Logo en el lado izquierdo (proporcional)
+      const ratio = img.naturalWidth / img.naturalHeight;
+      const logoWidth = 50;
+      const logoHeight = logoWidth / ratio;
+      doc.addImage(img, 'PNG', 14, 10, logoWidth, logoHeight);
+      currentY = logoHeight + 20; // Ajustar posición para el texto
+    }
+
     doc.setFontSize(20);
     doc.setTextColor(40, 44, 52);
-    doc.text(`Reporte de Movimientos - ${MESES[selectedMonth]} ${selectedYear}`, 14, 22);
+    doc.text(`Reporte de Movimientos - ${MESES[selectedMonth]} ${selectedYear}`, 14, currentY);
 
     doc.setFontSize(10);
     doc.setTextColor(100, 116, 139);
-    doc.text(`Generado por Symphony OS el ${new Date().toLocaleDateString()}`, 14, 30);
+    doc.text(`Generado por Symphony OS el ${new Date().toLocaleDateString()}`, 14, currentY + 8);
 
     doc.setDrawColor(226, 232, 240);
-    doc.line(14, 35, 196, 35);
+    doc.line(14, currentY + 13, 196, currentY + 13);
 
     doc.setFontSize(12);
     doc.setTextColor(30, 41, 59);
-    doc.text(`Resumen Ejecutivo:`, 14, 45);
+    doc.text(`Resumen Ejecutivo:`, 14, currentY + 23);
     doc.setFontSize(10);
-    doc.text(`• Total Salidas registradas: ${stats.salidas}`, 14, 52);
-    doc.text(`• Retornos completados: ${stats.completados}`, 14, 58);
-    doc.text(`• Instrumentos pendientes: ${stats.pendientes}`, 14, 64);
+    doc.text(`• Total Salidas registradas: ${stats.salidas}`, 14, currentY + 30);
+    doc.text(`• Retornos completados: ${stats.completados}`, 14, currentY + 36);
+    doc.text(`• Instrumentos pendientes: ${stats.pendientes}`, 14, currentY + 42);
 
     const tableData = monthlyHistory.map(rec => [
       rec.fechaSalida,
@@ -86,7 +107,7 @@ const ReportsView: React.FC<ReportsViewProps> = ({ history, onClearHistory }) =>
     ]);
 
     autoTable(doc, {
-      startY: 75,
+      startY: currentY + 53,
       head: [['Fecha', 'Estudiante', 'Instrumento', 'Marca/Serie', 'Salida', 'Retorno', 'Estado']],
       body: tableData,
       theme: 'striped',
