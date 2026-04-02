@@ -99,10 +99,10 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
     const term = normalizeText(instrumentSearch);
     if (!term) return [];
 
-    return inventory.filter(item => {
+    // 1. Instrumentos
+    const instrumentHits = inventory.filter(item => {
       const loaned = isItemLoaned(item);
 
-      // En modo SALIDA: toda la lista (instrumentos y estudiantes)
       // En modo RETORNO: solo lo que ya está prestado (en hogar)
       if (mode === 'in' && !loaned) return false;
 
@@ -115,8 +115,19 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
         normalizeText(item.Modelo).includes(term);
 
       return matchesText;
-    }).slice(0, 15); // Aumentar límite para ver múltiples instrumentos
-  }, [instrumentSearch, inventory, mode]);
+    });
+
+    // 2. Estudiantes del Directorio (Solo en modo SALIDA)
+    let studentHits: any[] = [];
+    if (mode === 'out' && availableStudents) {
+      studentHits = availableStudents
+        .filter(s => normalizeText(s.name).includes(term))
+        .map(s => ({ ...s, isStudentOnly: true }));
+    }
+
+    // Combinar y limitar
+    return [...instrumentHits, ...studentHits.slice(0, 8)].slice(0, 20);
+  }, [instrumentSearch, inventory, mode, availableStudents]);
 
   const handleStudentNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
@@ -220,59 +231,73 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
                 <input
                   type="text"
                   autoComplete="off"
-                  list={mode === 'out' ? 'all-students-datalist' : undefined}
                   placeholder={mode === 'out' ? "Buscar por instrumento o nombre de alumno..." : "Buscar alumno con instrumento en hogar..."}
                   className="w-full px-6 py-4.5 bg-[#020617] border-2 border-slate-800 rounded-2xl text-white font-bold focus:border-indigo-500 outline-none text-center placeholder:text-center"
                   value={instrumentSearch}
                   onChange={(e) => { setInstrumentSearch(e.target.value); setSelectedInstrument(null); }}
                 />
-                
-                {mode === 'out' && availableStudents && (
-                  <datalist id="all-students-datalist">
-                    {availableStudents.map((s, idx) => (
-                      <option key={idx} value={s.name} />
-                    ))}
-                  </datalist>
-                )}
 
                 {searchResults.length > 0 && !selectedInstrument && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-[#0f172a] border border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden divide-y divide-slate-800/50">
-                    {searchResults.map(item => (
+                    {searchResults.map((item: any, idx) => (
                       <button
-                        key={item.id}
+                        key={item.id || `student-${idx}`}
                         type="button"
                         onClick={() => {
-                          const loaned = isItemLoaned(item);
-                          // Si estamos en salida y está prestado, o retorno y está en sala, permitir seleccionar pero manejar la lógica
-                          setSelectedInstrument(item);
-                          setInstrumentSearch(item.Instrumento);
-                          setStudentName(item.Estudiante || '');
-                          setStudentCourse(item.Curso || '');
+                          if (item.isStudentOnly) {
+                            // Si selecciona un alumno, llenar los campos de nombre y curso
+                            setStudentName(item.name);
+                            setStudentCourse(item.course);
+                            setInstrumentSearch(""); // Limpiar búsqueda para que ahora busque instrumento
+                            setValidationError(null);
+                          } else {
+                            // Si selecciona un instrumento, flujo normal
+                            setSelectedInstrument(item);
+                            setInstrumentSearch(item.Instrumento);
+                            setStudentName(item.Estudiante || studentName);
+                            setStudentCourse(item.Curso || studentCourse);
+                          }
                         }}
                         className="w-full px-6 py-4 text-left hover:bg-indigo-500/10 flex justify-between items-center group transition-colors"
                       >
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-3">
-                            <span className="text-white font-black uppercase italic group-hover:text-indigo-400">{item.Instrumento}</span>
-                            <span className="text-[9px] font-black px-2 py-0.5 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded uppercase">
-                              {item.Serie || 'S/N'}
-                            </span>
+                        {item.isStudentOnly ? (
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center">
+                              <User className="w-5 h-5 text-indigo-400" />
+                            </div>
+                            <div>
+                              <p className="text-white font-black uppercase italic group-hover:text-indigo-400">{item.name}</p>
+                              <p className="text-[9px] font-bold text-slate-500 uppercase">{item.course || 'SIN CURSO'}</p>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-[9px] font-bold text-slate-500 uppercase flex items-center gap-1">
-                              <Tag className="w-2.5 h-2.5" /> {item.Marca || 'GENÉRICO'} {item.Modelo ? `(${item.Modelo})` : ''}
-                            </span>
-                            {item.Estudiante && (
-                              <span className="text-[9px] font-black text-indigo-400 uppercase flex items-center gap-1 bg-indigo-500/5 px-2 py-0.5 rounded">
-                                <UserCheck className="w-2.5 h-2.5" /> {item.Estudiante}
+                        ) : (
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-3">
+                              <span className="text-white font-black uppercase italic group-hover:text-indigo-400">{item.Instrumento}</span>
+                              <span className="text-[9px] font-black px-2 py-0.5 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded uppercase">
+                                {item.Serie || 'S/N'}
                               </span>
-                            )}
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="text-[9px] font-bold text-slate-500 uppercase flex items-center gap-1">
+                                <Tag className="w-2.5 h-2.5" /> {item.Marca || 'GENÉRICO'} {item.Modelo ? `(${item.Modelo})` : ''}
+                              </span>
+                              {item.Estudiante && (
+                                <span className="text-[9px] font-black text-indigo-400 uppercase flex items-center gap-1 bg-indigo-500/5 px-2 py-0.5 rounded">
+                                  <UserCheck className="w-2.5 h-2.5" /> {item.Estudiante}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>
+                        )}
                         <div className="flex items-center gap-4">
-                          <span className={`text-[8px] font-black px-2 py-1 rounded-md border ${isItemLoaned(item) ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'}`}>
-                            {isItemLoaned(item) ? 'EN HOGAR' : 'EN SALA'}
-                          </span>
+                          {item.isStudentOnly ? (
+                            <span className="text-[8px] font-black px-2 py-1 rounded-md border bg-indigo-500/10 border-indigo-500/20 text-indigo-400">ALUMNO DIRECTO</span>
+                          ) : (
+                            <span className={`text-[8px] font-black px-2 py-1 rounded-md border ${isItemLoaned(item) ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'}`}>
+                              {isItemLoaned(item) ? 'EN HOGAR' : 'EN SALA'}
+                            </span>
+                          )}
                           <ArrowRight className="w-4 h-4 text-slate-700" />
                         </div>
                       </button>
@@ -318,11 +343,10 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
                     type="text"
                     required
                     disabled={mode === 'in'}
-                    placeholder="Ingrese nombre completo"
+                    placeholder="Seleccione alumno arriba o ingrese nombre"
                     className={`w-full px-6 py-5 bg-[#020617] border-2 rounded-2xl text-white font-black uppercase transition-all ${validationError ? 'border-red-500 animate-shake' : 'border-slate-800 focus:border-indigo-500'} ${mode === 'in' ? 'opacity-40 cursor-not-allowed bg-slate-950 shadow-inner' : ''}`}
                     value={studentName}
-                    onChange={handleStudentNameChange} // Use the new handler
-                    list="student-names" // Link to datalist
+                    onChange={handleStudentNameChange} 
                   />
                   {validationError && (
                     <p className="text-[10px] font-black text-red-500 uppercase tracking-widest mt-2 flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
@@ -330,11 +354,9 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
                     </p>
                   )}
                   {availableStudents && mode === 'out' && (
-                    <datalist id="student-names">
-                      {availableStudents.map((student, index) => (
-                        <option key={index} value={student.name} />
-                      ))}
-                    </datalist>
+                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mt-2 flex items-center gap-1">
+                      <User className="w-2.5 h-2.5" /> Estudiante del directorio disponible
+                    </p>
                   )}
                 </div>
                 <div className="space-y-2">
