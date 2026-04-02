@@ -125,8 +125,9 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
         .map(s => ({ ...s, isStudentOnly: true }));
     }
 
-    // Combinar y limitar
-    return [...instrumentHits, ...studentHits.slice(0, 8)].slice(0, 20);
+    // Combinar y limitar: PRIORIZAMOS ESTUDIANTES AL PRINCIPIO
+    const combined = [...studentHits.slice(0, 5), ...instrumentHits];
+    return combined.slice(0, 20);
   }, [instrumentSearch, inventory, mode, availableStudents]);
 
   const handleStudentNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -231,11 +232,38 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
                 <input
                   type="text"
                   autoComplete="off"
-                  placeholder={mode === 'out' ? "Buscar por instrumento o nombre de alumno..." : "Buscar alumno con instrumento en hogar..."}
+                  placeholder={mode === 'out' ? "Escriba nombre de alumno o instrumento..." : "Escriba nombre para devolver..."}
                   className="w-full px-6 py-4.5 bg-[#020617] border-2 border-slate-800 rounded-2xl text-white font-bold focus:border-indigo-500 outline-none text-center placeholder:text-center"
                   value={instrumentSearch}
                   onChange={(e) => { setInstrumentSearch(e.target.value); setSelectedInstrument(null); }}
                 />
+
+                {/* Badge Alumno Seleccionado (Feedback Visual) */}
+                {studentName && mode === 'out' && !selectedInstrument && (
+                  <div className="mt-4 animate-in slide-in-from-top-2 duration-300">
+                    <div className="bg-indigo-600/20 border border-indigo-500/40 px-5 py-3 rounded-2xl flex items-center justify-between shadow-lg backdrop-blur-sm">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center shadow-inner">
+                          <UserCheck className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-[8px] font-black text-indigo-400 uppercase tracking-tighter">Estudiante Seleccionado</p>
+                          <p className="text-xs font-bold text-white uppercase">{studentName}</p>
+                        </div>
+                      </div>
+                      <button 
+                        type="button"
+                        onClick={() => { setStudentName(''); setStudentCourse(''); }}
+                        className="text-[9px] font-black text-indigo-400 uppercase hover:text-white transition-colors border-b border-indigo-400/30"
+                      >
+                         Cambiar
+                      </button>
+                    </div>
+                    <p className="text-[9px] font-bold text-slate-500 uppercase text-center mt-3 tracking-widest animate-pulse">
+                       AQUÍ ABAJO BUSQUE EL INSTRUMENTO ↓
+                    </p>
+                  </div>
+                )}
 
                 {searchResults.length > 0 && !selectedInstrument && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-[#0f172a] border border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden divide-y divide-slate-800/50">
