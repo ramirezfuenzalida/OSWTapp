@@ -102,10 +102,10 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
     return inventory.filter(item => {
       const loaned = isItemLoaned(item);
 
-      // No filtrar por modo en los resultados de búsqueda para que el usuario pueda encontrar cualquier registro
-      // Pero mantendremos el badge visual para indicar dónde está el instrumento.
-      // if (mode === 'out' && loaned) return false;
-      // if (mode === 'in' && !loaned) return false;
+      // En modo SALIDA: solo items en sala
+      // En modo RETORNO: solo items en hogar (prestados)
+      if (mode === 'out' && loaned) return false;
+      if (mode === 'in' && !loaned) return false;
 
       // Coincidencia por texto
       const matchesText =
