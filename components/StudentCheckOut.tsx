@@ -138,10 +138,11 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
       const listToSearch = mode === 'out' ? availableStudents : loanedStudents;
       const isRegistered = listToSearch?.some(s => normalizeText(s.name) === normalizeText(studentName));
 
-      if (mode === 'out' && !isRegistered) {
-        setValidationError(`El estudiante "${studentName}" no está registrado. Por favor, regístrelo primero en el Directorio.`);
-        return;
-      }
+      // No longer blocking if not in directory - allow manual entry
+      // if (mode === 'out' && !isRegistered) {
+      //   setValidationError(`El estudiante "${studentName}" no está registrado. Por favor, regístrelo primero en el Directorio.`);
+      //   return;
+      // }
 
       if (mode === 'in') {
         const recordName = normalizeText(selectedInstrument.Estudiante);
@@ -220,20 +221,11 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
                 <input
                   type="text"
                   autoComplete="off"
-                  list={mode === 'in' ? 'loaned-student-names' : undefined}
                   placeholder={mode === 'out' ? "Buscar instrumento disponible..." : "Buscar alumno con instrumento en hogar..."}
                   className="w-full px-6 py-4.5 bg-[#020617] border-2 border-slate-800 rounded-2xl text-white font-bold focus:border-indigo-500 outline-none text-center placeholder:text-center"
                   value={instrumentSearch}
                   onChange={(e) => { setInstrumentSearch(e.target.value); setSelectedInstrument(null); }}
                 />
-                
-                {mode === 'in' && (
-                  <datalist id="loaned-student-names">
-                    {loanedStudents.map((s, idx) => (
-                      <option key={idx} value={s.name} />
-                    ))}
-                  </datalist>
-                )}
 
                 {searchResults.length > 0 && !selectedInstrument && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-[#0f172a] border border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden divide-y divide-slate-800/50">
