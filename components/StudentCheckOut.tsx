@@ -204,7 +204,7 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
             <AlertCircle className="w-5 h-5 shrink-0" />
             <p className="text-[10px] font-black uppercase tracking-widest leading-relaxed">
               {mode === 'out'
-                ? 'Solo se muestran instrumentos DISPONIBLES en la sala.'
+                ? 'Se muestra la lista completa de instrumentos y alumnos para procesar la salida.'
                 : 'Solo se muestran instrumentos con SALIDA ACTIVA para procesar el retorno.'}
             </p>
           </div>
@@ -220,11 +220,20 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
                 <input
                   type="text"
                   autoComplete="off"
-                  placeholder={mode === 'out' ? "Buscar instrumento disponible..." : "Buscar alumno con instrumento en hogar..."}
+                  list={mode === 'out' ? 'all-students-datalist' : undefined}
+                  placeholder={mode === 'out' ? "Buscar por instrumento o nombre de alumno..." : "Buscar alumno con instrumento en hogar..."}
                   className="w-full px-6 py-4.5 bg-[#020617] border-2 border-slate-800 rounded-2xl text-white font-bold focus:border-indigo-500 outline-none text-center placeholder:text-center"
                   value={instrumentSearch}
                   onChange={(e) => { setInstrumentSearch(e.target.value); setSelectedInstrument(null); }}
                 />
+                
+                {mode === 'out' && availableStudents && (
+                  <datalist id="all-students-datalist">
+                    {availableStudents.map((s, idx) => (
+                      <option key={idx} value={s.name} />
+                    ))}
+                  </datalist>
+                )}
 
                 {searchResults.length > 0 && !selectedInstrument && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-[#0f172a] border border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden divide-y divide-slate-800/50">
