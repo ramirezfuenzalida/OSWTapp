@@ -94,9 +94,15 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
 
     return availableStudents?.filter(s => studentNamesInInventory.has(globalNormalize(s.name))) || [];
   }, [inventory, availableStudents]);
-
   const searchResults = useMemo(() => {
     const term = normalizeText(instrumentSearch);
+
+    // SI NO HAY BUSQUEDA PERO HAY ALUMNO SELECCIONADO: Mostrar instrumentos disponibles sugeridos
+    if (!term && mode === 'out' && studentName && !selectedInstrument) {
+      return inventory.filter(item => !isItemLoaned(item)).slice(0, 10);
+    }
+
+    // Si no hay búsqueda ni alumno, no mostrar nada
     if (!term) return [];
 
     // 1. Instrumentos
@@ -117,9 +123,9 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
       return matchesText;
     });
 
-    // 2. Estudiantes del Directorio (Solo en modo SALIDA)
+    // 2. Estudiantes del Directorio (Solo en modo SALIDA y si no hay uno seleccionado)
     let studentHits: any[] = [];
-    if (mode === 'out' && availableStudents) {
+    if (mode === 'out' && availableStudents && !studentName) {
       studentHits = availableStudents
         .filter(s => normalizeText(s.name).includes(term))
         .map(s => ({ ...s, isStudentOnly: true }));
@@ -128,7 +134,7 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
     // Combinar y limitar: PRIORIZAMOS ESTUDIANTES AL PRINCIPIO
     const combined = [...studentHits.slice(0, 5), ...instrumentHits];
     return combined.slice(0, 20);
-  }, [instrumentSearch, inventory, mode, availableStudents]);
+  }, [instrumentSearch, inventory, mode, availableStudents, studentName, selectedInstrument]);
 
   const handleStudentNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
