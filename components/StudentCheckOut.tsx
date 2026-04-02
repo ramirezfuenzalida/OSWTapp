@@ -102,9 +102,8 @@ const StudentCheckOut: React.FC<StudentCheckOutProps> = ({ inventory, onConfirm,
     return inventory.filter(item => {
       const loaned = isItemLoaned(item);
 
-      // En modo SALIDA: solo items en sala
-      // En modo RETORNO: solo items en hogar (prestados)
-      if (mode === 'out' && loaned) return false;
+      // En modo SALIDA: toda la lista (instrumentos y estudiantes)
+      // En modo RETORNO: solo lo que ya está prestado (en hogar)
       if (mode === 'in' && !loaned) return false;
 
       // Coincidencia por texto
